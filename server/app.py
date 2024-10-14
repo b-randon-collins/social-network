@@ -1,12 +1,12 @@
 from flask import Flask, jsonify
 from flask_migrate import Migrate
 from flask_cors import CORS
-from database import db, bcrypt
+from database import db
 from routes.userRoutes import user_bp
 
 app = Flask(__name__)
 
-CORS(app)
+CORS(app, supports_credentials=True)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///social_network.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False

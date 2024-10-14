@@ -31,3 +31,18 @@ def signup():
 
     print("Signup successful for user:", name)
     return jsonify(message="Signup successful!")
+
+@user_bp.route('/login', methods=['POST'])
+def login():
+    data = request.get_json()
+
+    email = data.get('email')
+    password = data.get('password')
+
+    if not email or not password:
+        return jsonify(message="Email and password are required."), 400
+
+    user = User.query.filter_by(email=email).first()
+    if user and user.check_password(password):
+        return jsonify(message="Login successful!"), 200
+    return jsonify(message="Invalid email or password."), 401
