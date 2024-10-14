@@ -2,6 +2,9 @@ from flask import Flask, jsonify
 from flask_migrate import Migrate
 from flask_cors import CORS
 from database import db
+from models.userModel import User
+from models.postModel import Post
+
 from routes.userRoutes import user_bp
 
 app = Flask(__name__)
