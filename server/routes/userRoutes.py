@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, session, make_response
 from models.userModel import db, User
 
 user_bp = Blueprint('user', __name__)
@@ -44,5 +44,29 @@ def login():
 
     user = User.query.filter_by(email=email).first()
     if user and user.check_password(password):
-        return jsonify(message="Login successful!"), 200
+        session['user_id'] = user.id
+        response = jsonify(message="Login successful!")
+        response.set_cookie('user_id', str(user.id), httponly=False, samesite='Lax')
+       
+        return response, 200
+    
+    response.set_cookie('user_id', str(user.id), httponly=False)
+
     return jsonify(message="Invalid email or password."), 401
+
+
+@user_bp.route('/logout', methods=['DELETE'])
+def logout():
+    session.pop('user_id', None)
+    response = jsonify(message="Logout successful!")
+    response.set_cookie('user_id', '', expires=0)
+    return response, 204
+
+@user_bp.route('/current_user', methods=['GET'])
+def current_user():
+    user_id = session.get('user_id')
+    if user_id:
+        user = User.query.get(user_id)
+        if user:
+            return jsonify(user={'id': user.id, 'name': user.name, 'email': user.email}), 200
+    return jsonify(message="No user is logged in."), 401

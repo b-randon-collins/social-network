@@ -3,13 +3,16 @@
 import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import { useNavigate } from 'react-router-dom';
 import '../styles.css';
 
 const Registration = () => {
+    const navigate = useNavigate();
+
     const initialValues = {
-        name: '',
-        email: '',
-        password: '',
+        name: 'John Doe',
+        email: 'john@example.com',
+        password: 'mypassword123',
     };
 
     const validationSchema = Yup.object({
@@ -27,8 +30,12 @@ const Registration = () => {
             body: JSON.stringify(values),
         });
 
-        const data = await response.json();
-        console.log(data);
+        if (response.ok) {
+            navigate('/login');
+        } else {
+            alert('Registration failed!');
+        }
+
         setSubmitting(false);
     };
 
