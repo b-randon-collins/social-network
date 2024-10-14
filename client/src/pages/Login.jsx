@@ -4,6 +4,7 @@ import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 import '../styles.css';
 
 const Login = () => {
@@ -28,16 +29,22 @@ const Login = () => {
             credentials: 'include',
             body: JSON.stringify(values),
         });
-
+    
         if (response.ok) {
-            alert('Login successful!');
-            navigate('/home');
+            const data = await response.json();
+            console.log('Login response:', data);
+            
+            const userId = Cookies.get('user_id');
+            console.log('User ID from cookie after login:', userId);
+    
+            navigate('/welcome');
         } else {
             alert('Login failed!');
         }
-
+    
         setSubmitting(false);
     };
+    
 
     return (
         <div className='page'>

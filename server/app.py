@@ -4,8 +4,8 @@ from flask_cors import CORS
 from database import db
 from models.userModel import User
 from models.postModel import Post
-
 from routes.userRoutes import user_bp
+from routes.postRoutes import post_bp
 
 app = Flask(__name__)
 
@@ -19,6 +19,7 @@ db.init_app(app)
 migrate = Migrate(app, db)
 
 app.register_blueprint(user_bp, url_prefix='/user')
+app.register_blueprint(post_bp, url_prefix='/post')
 
 @app.route('/')
 def welcome():
