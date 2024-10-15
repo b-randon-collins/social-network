@@ -1,5 +1,5 @@
 // src/App.jsx
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import MainNav from './components/MainNav';
 import Welcome from './pages/Welcome';
@@ -8,6 +8,7 @@ import Home from './pages/Home';
 import Registration from './pages/Registration';
 
 const App = () => {
+
   return (
     <Router>
       <MainNav />

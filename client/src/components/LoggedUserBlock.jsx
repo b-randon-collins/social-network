@@ -1,9 +1,9 @@
 import React from 'react';
-import Cookies from 'js-cookie';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 const LoggedUserBlock = () => {
-    const userId = Cookies.get('user_id');
+    const user = useSelector((state) => state.user.user);
     const navigate = useNavigate();
 
     const handleLoginClick = () => {
@@ -25,9 +25,9 @@ const LoggedUserBlock = () => {
 
     return (
         <div id='logged-user-block'>
-            {userId ? (
+            {user ? (
                 <>
-                    <span style={{"paddingRight":"10px"}}>User: {userId}</span>
+                    <span style={{ paddingRight: "10px" }}>{user.name}</span>
                     <button onClick={handleLogout}>Logout</button>
                 </>
             ) : (
