@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import Cookies from 'js-cookie';
+import { useSelector } from 'react-redux';
 
 const PostForm = () => {
     const [content, setContent] = useState('');
     const [error, setError] = useState(null);
     const [message, setMessage] = useState(null);
 
+    const userId = useSelector((state) => state.user.user?.id);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        const userId = Cookies.get('user_id');
 
         if (!userId) {
             setError('User not logged in.');

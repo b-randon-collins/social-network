@@ -9,7 +9,7 @@ from routes.postRoutes import post_bp
 
 app = Flask(__name__)
 
-CORS(app, supports_credentials=True)
+CORS(app, supports_credentials=True, origins=["http://localhost:5173"])
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///social_network.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
