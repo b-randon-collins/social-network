@@ -35,19 +35,29 @@ def signup():
 @user_bp.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
+    print("Login request data:", data)
+
     email = data.get('email')
     password = data.get('password')
 
     if not email or not password:
+        print("Email or password missing.")
         return jsonify(message="Email and password are required."), 400
 
     user = User.query.filter_by(email=email).first()
-    if user and user.check_password(password):
-        session['user_id'] = user.id
-        response = jsonify(id=user.id, name=user.name, email=user.email)
-        response.set_cookie('user_id', str(user.id), httponly=False, samesite='None', secure=True)
-        return response, 200
-    
+    if user:
+        print(f"User found: {user.id} - {user.name}")
+        if user.check_password(password):
+            session['user_id'] = user.id
+            print(f"Session set: {session}")
+            response = jsonify(id=user.id, name=user.name, email=user.email)
+            print("Login successful:", response.get_json())
+            return response, 200
+        else:
+            print("Invalid password for user:", user.id)
+    else:
+        print("User not found with email:", email)
+
     return jsonify(message="Invalid email or password."), 401
 
 @user_bp.route('/logout', methods=['DELETE'])

@@ -21,3 +21,16 @@ def add_like():
 def get_likes(post_id):
     likes = Like.query.filter_by(post_id=post_id).all()
     return jsonify({'likes_count': len(likes)})
+
+@like_bp.route('/<int:post_id>', methods=['DELETE'])
+def remove_like(post_id):
+    user_id = request.json.get('user_id')
+    like = Like.query.filter_by(user_id=user_id, post_id=post_id).first()
+    
+    if not like:
+        return jsonify(message="Like not found"), 404
+    
+    db.session.delete(like)
+    db.session.commit()
+    
+    return jsonify(message="Like removed successfully"), 200

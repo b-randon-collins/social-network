@@ -9,16 +9,18 @@
   -webkit-font-smoothing: antialiased;
 }
 .page {
+  padding-top: 20px;
   width: 80%;
-  margin:auto
+  margin: auto;
 }
 a {
   font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+  color: dodgerblue;
+  text-decoration: none;
+  padding: 10px 30px;
 }
 a:hover {
-  color: #535bf2;
+  text-decoration: underline;
 }
 
 body {
@@ -53,21 +55,30 @@ button:focus-visible {
     background-color: #ffffff;
   }
   a:hover {
-    color: #747bff;
+    text-decoration: underline;
   }
+
   button {
     background-color: #f9f9f9;
   }
 }
 
+nav#main-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
 
-#main-nav {
-    border-bottom: 1px solid;
+nav#main-nav > ul {
+    margin: 5px;
+}
+
+div#root {
+    padding-top: 40px;
 }
 
 #main-nav ul li {
     display: inline-flex;
-    padding: 10px 30px;
 }
 
-nav#main-nav {}

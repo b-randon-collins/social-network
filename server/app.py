@@ -10,12 +10,14 @@ from routes.likeRoutes import like_bp
 
 app = Flask(__name__)
 
-CORS(app, supports_credentials=True, origins=["http://localhost:5173"])
+CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}}, supports_credentials=True)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///social_network.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = 'your_secret_key_here'
-
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+app.config['SESSION_COOKIE_SECURE'] = False
+app.config['SESSION_COOKIE_NAME'] = 'session'
 db.init_app(app)
 migrate = Migrate(app, db)
 
