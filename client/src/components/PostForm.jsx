@@ -36,7 +36,7 @@ const PostForm = () => {
   };
 
   return (
-    <div>
+    <div id='post-form-block'>
       <form onSubmit={handleSubmit}>
         <textarea
           value={content}

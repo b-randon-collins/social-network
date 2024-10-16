@@ -28,7 +28,7 @@ const Login = () => {
     setSubmitting(false);
 
     if (attemptLogin.fulfilled.match(result)) {
-      navigate('/welcome');
+      navigate('/');
     } else {
       alert(result.error?.message || 'Login failed!');
     }
@@ -37,7 +37,7 @@ const Login = () => {
   return (
     <div className='page'>
       <h2>Login</h2>
-      {loading && <p>Logging in...</p>}
+
       {error && <p style={{ color: 'red' }}>{error}</p>}
       <Formik
         id="login-form"
