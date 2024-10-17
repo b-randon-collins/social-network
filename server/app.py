@@ -4,9 +4,11 @@ from flask_cors import CORS
 from database import db
 from models.userModel import User
 from models.postModel import Post
+from models.commentModel import Comment
 from routes.userRoutes import user_bp
 from routes.postRoutes import post_bp
 from routes.likeRoutes import like_bp
+from routes.commentRoutes import comment_bp
 
 app = Flask(__name__)
 
@@ -24,6 +26,7 @@ migrate = Migrate(app, db)
 app.register_blueprint(user_bp, url_prefix='/user')
 app.register_blueprint(post_bp, url_prefix='/post')
 app.register_blueprint(like_bp, url_prefix='/like')
+app.register_blueprint(comment_bp, url_prefix='/comment')
 
 @app.route('/')
 def welcome():
