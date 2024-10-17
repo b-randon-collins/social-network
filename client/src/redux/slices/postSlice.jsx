@@ -1,5 +1,6 @@
 // postSlice.js
 
+import { addInitialComments, addRecentUserComment } from './commentsSlice';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
@@ -17,15 +18,26 @@ export const createPost = createAsyncThunk(
 
 export const fetchPosts = createAsyncThunk(
   'posts/fetchPosts',
-  async (_, { rejectWithValue }) => {
+  async (_, { rejectWithValue, dispatch }) => {
     try {
       const response = await axios.get('http://localhost:3001/post/', { withCredentials: true });
-      return response.data.all_posts;
+      const { posts, comments, recent_comments } = response.data; // Extract recent_comments here
+
+      dispatch(addInitialComments(comments));
+      
+      for (const postId in recent_comments) {
+        dispatch(addRecentUserComment({ post_id: postId, comment: recent_comments[postId] }));
+      }
+      
+      return posts;
     } catch (err) {
       return rejectWithValue(err.response.data);
     }
   }
 );
+
+
+
 
 export const addLike = createAsyncThunk(
   'posts/addLike',

@@ -6,8 +6,15 @@ import Welcome from './pages/Welcome';
 import Login from './pages/Login';
 import Home from './pages/Home';
 import Registration from './pages/Registration';
+import UserEditForm from './pages/UserEditForm';
 
 const App = () => {
+
+  useEffect(() => {
+    if (window.location.hostname !== 'localhost') {
+      window.location.href = 'http://localhost:5173';
+    }
+  }, []);
 
   return (
     <Router>
@@ -17,6 +24,7 @@ const App = () => {
         <Route path="/welcome" element={<Welcome />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Registration />} />
+        <Route path="/profile" element={<UserEditForm />} />
       </Routes>
     </Router>
   );

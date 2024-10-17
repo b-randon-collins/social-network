@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const LoggedUserBlock = () => {
     const user = useSelector((state) => state.user.user);
@@ -25,9 +25,10 @@ const LoggedUserBlock = () => {
 
     return (
         <div id='logged-user-block'>
+
             {user ? (
                 <>
-                    <span style={{ paddingRight: "10px" }}>{user.name}</span>
+            <Link to="/profile">{user.name}</Link>
                     <button onClick={handleLogout}>Logout</button>
                 </>
             ) : (

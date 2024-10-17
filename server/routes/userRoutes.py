@@ -60,6 +60,31 @@ def login():
 
     return jsonify(message="Invalid email or password."), 401
 
+@user_bp.route('/edit', methods=['PATCH'])
+def edit_user():
+    data = request.get_json()
+    
+    if not data:
+        return jsonify(message="No data provided"), 400
+
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify(message="User not logged in."), 401
+
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify(message="User not found."), 404
+
+    if 'name' in data:
+        user.name = data['name']
+    if 'email' in data:
+        user.email = data['email']
+    if 'bio' in data:
+        user.bio = data['bio']
+
+    db.session.commit()
+    return jsonify(message="User updated successfully!", user={"name": user.name, "email": user.email, "bio": user.bio})
+
 @user_bp.route('/logout', methods=['DELETE'])
 def logout():
     session.pop('user_id', None)

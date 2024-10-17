@@ -21,6 +21,16 @@ export const attemptLogin = createAsyncThunk(
     }
 );
 
+export const editUser = createAsyncThunk(
+    'user/edit',
+    async (userData) => {
+        const response = await axios.patch('http://localhost:3001/user/edit', userData, {
+            withCredentials: true,
+        });
+        return response.data.user; // Assuming response contains user data
+    }
+);
+
 const userSlice = createSlice({
     name: 'user',
     initialState: {
@@ -59,6 +69,18 @@ const userSlice = createSlice({
                 state.loading = false;
                 state.error = action.error.message;
             })
+            .addCase(editUser.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(editUser.fulfilled, (state, action) => {
+                state.loading = false;
+                state.user = { ...state.user, ...action.payload };
+            })
+            .addCase(editUser.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message;
+            });
 
     },
 });
