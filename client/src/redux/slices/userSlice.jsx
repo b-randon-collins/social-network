@@ -3,6 +3,16 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
+export const resetNotificationAlert = createAsyncThunk(
+    'user/resetNotificationAlert',
+    async (userId) => {
+        const response = await axios.patch('http://127.0.0.1:3001/user/notification_alert_reset', { user_id: userId }, {
+            withCredentials: true,
+        });
+        return response.data;
+    }
+);
+
 export const registerUser = createAsyncThunk(
     'user/register',
     async (userData) => {
@@ -47,6 +57,11 @@ const userSlice = createSlice({
         logout: (state) => {
             state.user = null;
         },
+        notificationAlertTrue: (state) => {
+            if (state.user) {
+                state.user.notification_alert = true;
+            }
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -85,7 +100,13 @@ const userSlice = createSlice({
             .addCase(editUser.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message;
+            })
+            .addCase(resetNotificationAlert.fulfilled, (state) => {
+                if (state.user) {
+                    state.user.notification_alert = 0;
+                }
             });
+
 
     },
 });

@@ -36,14 +36,6 @@ def create_post():
     db.session.add(post)
     db.session.commit()
 
-    all_users = User.query.all()
-
-    for user in all_users:
-        notification = Notification(user_id=user.id, post_id=post.id)
-        db.session.add(notification)
-
-    db.session.commit()
-
     likes_count = 0
     logged_user_liked = False
 
@@ -56,6 +48,7 @@ def create_post():
         'likes_count': likes_count,
         'logged_user_liked': logged_user_liked
     }), 201
+
 
 @post_bp.route('/', methods=['GET'])
 def get_all_posts():

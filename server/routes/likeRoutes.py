@@ -16,6 +16,11 @@ def create_like_bp(socketio):
         db.session.add(new_like)
         db.session.commit()
 
+        all_users = User.query.all()
+        for user in all_users:
+            user.notification_alert = 1
+        db.session.commit()
+
         post = Post.query.get(post_id)
         if post:
             author_id = post.user_id  

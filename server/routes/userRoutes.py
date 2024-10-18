@@ -1,11 +1,22 @@
 from flask import Blueprint, request, jsonify, session
 from models.userModel import db, User
-from flask_socketio import emit, join_room  # Ensure join_room is imported
+from flask_socketio import emit, join_room
 
 active_users = {}
 
 def create_user_bp(socketio):
     user_bp = Blueprint('user', __name__)
+
+    @user_bp.route('/notification_alert_reset', methods=['PATCH'])
+    def reset_notification_alert():
+        user_id = request.json.get('user_id')
+        user = User.query.get(user_id)
+        
+        if user:
+            user.notification_alert = 0
+            db.session.commit()
+            return jsonify({'message': 'Notification alert reset successfully'}), 200
+        return jsonify({'message': 'User not found'}), 404
 
     @user_bp.route('/login', methods=['POST'])
     def login():
@@ -21,17 +32,19 @@ def create_user_bp(socketio):
         if user:
             if user.check_password(password):
                 session['user_id'] = user.id
-                response = jsonify(id=user.id, name=user.name, email=user.email)
+                response = jsonify(
+                    id=user.id,
+                    name=user.name,
+                    email=user.email,
+                    notification_alert=user.notification_alert
+                )
 
                 socketio.emit('join', {'userId': user.id}, room=user.id)
                 active_users[user.id] = user.name
-                print(f"User {user.name} (ID: {user.id}) logged in.")
-                print("Current Active Users:")
-                for uid, name in active_users.items():
-                    print(f"- {name} (ID: {uid}) in room {uid}")
 
                 return response, 200
         return jsonify(message="Invalid email or password."), 401
+
 
     @user_bp.route('/signup', methods=['POST'])
     def signup():

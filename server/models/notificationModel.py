@@ -11,7 +11,7 @@ class Notification(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     is_read = db.Column(db.Boolean, default=False)
 
-    user = db.relationship('User', backref='notifications')
+    user = db.relationship('User', backref='notifications_list')
     post = db.relationship('Post', back_populates='notifications')
 
     def __repr__(self):

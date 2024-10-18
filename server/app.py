@@ -1,3 +1,5 @@
+# app.py
+
 from flask import Flask, jsonify
 from flask_migrate import Migrate
 from flask_cors import CORS
@@ -7,6 +9,7 @@ from routes.userRoutes import create_user_bp
 from routes.likeRoutes import create_like_bp
 from routes.postRoutes import post_bp
 from routes.commentRoutes import comment_bp
+from routes.notificationRoutes import notification_bp
 
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins='*')
@@ -27,7 +30,7 @@ app.register_blueprint(create_user_bp(socketio), url_prefix='/user')
 app.register_blueprint(post_bp, url_prefix='/post')
 app.register_blueprint(create_like_bp(socketio), url_prefix='/like')
 app.register_blueprint(comment_bp, url_prefix='/comment')
-
+app.register_blueprint(notification_bp, url_prefix='/notifications')
 
 @app.route('/')
 def welcome():
