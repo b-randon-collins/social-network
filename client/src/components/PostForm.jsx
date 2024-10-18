@@ -46,7 +46,7 @@ const PostForm = () => {
           required
         />
         <button type="submit" disabled={loading}>
-          {loading ? 'Posting...' : 'Create Post'}
+          {loading ? 'Posting...' : 'Add Post'}
         </button>
       </form>
       {error && <p style={{ color: 'red' }}>{error}</p>}

@@ -13,6 +13,7 @@ export const fetchAllNotifications = createAsyncThunk('notifications/fetchAllNot
   return response.data;
 });
 
+
 export const getRecentNotifications = createAsyncThunk('notifications/getRecentNotifications', async () => {
   const response = await axios.get('http://127.0.0.1:3001/notifications/recent', {
     withCredentials: true,
@@ -42,16 +43,7 @@ const notificationSlice = createSlice({
       .addCase(fetchAllNotifications.fulfilled, (state, action) => {
         state.notifications = action.payload;
         state.unreadCount = action.payload.filter(n => !n.is_read).length;
-      })
-      .addCase(getRecentNotifications.fulfilled, (state, action) => {
-        console.log("Recent Notifications Fetched:", action.payload); // Debugging line
-        state.notifications = action.payload.map(notification => ({
-          ...notification,
-          name: notification.name,
-        }));
-        state.unreadCount = action.payload.filter(n => !n.is_read).length;
       });
-
   },
 });
 

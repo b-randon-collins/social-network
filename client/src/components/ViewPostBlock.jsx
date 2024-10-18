@@ -42,11 +42,20 @@ const ViewPostBlock = ({ post, userId }) => {
 
   return (
     <div className="post">
-      <p>
-        <b>{post.name}</b><br />
-        <small>{new Date(post.created_at).toLocaleString()}</small>
-      </p>
-      <p style={{ fontSize: 'larger' }}>{post.content}</p>
+
+        <h3 className='title'>{post.name}</h3>
+        <small>
+          {new Date(post.created_at).toLocaleDateString(undefined, {
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric',
+          })}{', ' + new Date(post.created_at).toLocaleTimeString(undefined, {
+            hour: 'numeric',
+            minute: 'numeric',
+            hour12: true,
+          })}
+        </small>
+        <p style={{ fontSize: 'larger' }}>{post.content}</p>
 
       <div className="post-footer" style={footerStyle}>
         <div style={footerHalfStyle}>

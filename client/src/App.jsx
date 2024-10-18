@@ -8,6 +8,7 @@ import Login from './pages/Login';
 import Home from './pages/Home';
 import Registration from './pages/Registration';
 import UserEditForm from './pages/UserEditForm';
+import Activities from './pages/Activities';
 
 const App = () => {
   const user = useSelector(state => state.user.user);
@@ -35,6 +36,10 @@ const App = () => {
         <Route 
           path="/profile" 
           element={user?.id ? <UserEditForm /> : <Navigate to="/login" />} 
+        />
+        <Route 
+          path="/activities" 
+          element={user?.id ? <Activities /> : <Navigate to="/login" />} 
         />
       </Routes>
     </Router>

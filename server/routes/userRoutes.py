@@ -36,7 +36,8 @@ def create_user_bp(socketio):
                     id=user.id,
                     name=user.name,
                     email=user.email,
-                    notification_alert=user.notification_alert
+                    notification_alert=user.notification_alert,
+                    bio=user.bio
                 )
 
                 socketio.emit('join', {'userId': user.id}, room=user.id)

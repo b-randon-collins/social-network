@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import LoggedUserBlock from './LoggedUserBlock';
 import { addNotification, getRecentNotifications } from '../redux/slices/notificationSlice';
 import { resetNotificationAlert } from '../redux/slices/userSlice';
 import { io } from 'socket.io-client';
-import SegmentIcon from '@mui/icons-material/Segment';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import NotificationsMenuBlock from './NotificationsMenuBlock';
 
 const MainNav = () => {
     const user = useSelector(state => state.user.user);
+    const notifications = useSelector(state => state.notifications?.notifications);
     const notification_alert = useSelector(state => state.user.user?.notification_alert);
-    const notifications = useSelector(state => state.notifications.notifications);
     const dispatch = useDispatch();
     const [socket, setSocket] = useState(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [notificationCount, setNotificationCount] = useState(0);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const newSocket = io('http://127.0.0.1:3001');
@@ -54,44 +54,48 @@ const MainNav = () => {
         }
     };
 
-    const handleMenuClose = () => {
-        setIsMenuOpen(false);
-    };
-
     return (
         <nav id='main-nav'>
             <ul>
                 <li>
-                    <Link to="/">Home</Link>
+                    <Link to="/"><h3>Brandon: LFW</h3></Link>
                 </li>
+
                 {!user && (
                     <li>
-                        <Link to="/register">Register</Link>
+                        {/* Additional links for unauthenticated users can go here */}
                     </li>
                 )}
-                <li style={{"float":"right"}}>
+                <li style={{ "float": "right" }}>
                     <LoggedUserBlock />
                 </li>
-                <li style={{"float":"right", "padding":"10px", position: 'relative'}} onClick={handleNotificationClick}>
-                    <NotificationsIcon />
-                    {notification_alert === true &&(
-                        <span style={{
-                            position: 'absolute',
-                            top: '5px',
-                            right: '5px',
-                            width: '12px',
-                            height: '12px',
-                            borderRadius: '50%',
-                            backgroundColor: 'red',
-                        }} />
-                    )}
-                    {isMenuOpen && (
-                        <NotificationsMenuBlock
-                            notifications={notifications}
-                            onClose={handleMenuClose}
-                        />
-                    )}
+                {user && (
+                    <>
+                    <li style={{ "float": "right", "padding": "10px", position: 'relative' }} onClick={handleNotificationClick}>
+                        <NotificationsIcon />
+                        {notification_alert === true && (
+                            <span style={{
+                                position: 'absolute',
+                                top: '5px',
+                                right: '5px',
+                                width: '12px',
+                                height: '12px',
+                                borderRadius: '50%',
+                                backgroundColor: 'red',
+                            }} />
+                        )}
+                        {isMenuOpen && (
+                            <NotificationsMenuBlock
+                                notifications={notifications}
+                                onClose={() => setIsMenuOpen(false)}
+                            />
+                        )}
+                    </li>
+                    <li>
+                    <Link to="/activities">Activities</Link>
                 </li>
+                </>
+                )}
             </ul>
         </nav>
     );

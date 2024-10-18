@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from models.likeModel import Like
 from models.postModel import Post  
 from models.userModel import User  
+from models.notificationModel import Notification
 from database import db
 
 def create_like_bp(socketio):
@@ -35,6 +36,14 @@ def create_like_bp(socketio):
                 'author_id': author_id,
                 'post_id': post_id
             })
+
+            new_notification = Notification(
+                user_id=user_id,
+                post_id=post_id,
+                is_read=False
+            )
+            db.session.add(new_notification)
+            db.session.commit()
 
         return jsonify({'message': 'Like added successfully', 'like_id': new_like.id}), 201
 

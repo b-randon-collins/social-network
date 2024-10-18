@@ -1,31 +1,40 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import CloseIcon from '@mui/icons-material/Close';
 
 const NotificationsMenuBlock = ({ onClose }) => {
     const notifications = useSelector(state => state.notifications.notifications);
 
     const createMessage = (notification) => {
-        const date = new Date(notification.created_at).toLocaleDateString(); // Format date as needed
+        const date = new Date(notification.created_at).toLocaleDateString();
         return `${notification.username} liked your post.`;
     };
 
     return (
         <div className="notifications-menu">
-            <h3>Recent Notifications</h3>
+            <h3>Activities</h3>
+            <button onClick={onClose}><CloseIcon /></button>
             {notifications.length > 0 ? (
-                <table>
-                    <tbody>
+                <ul>
+                 
                         {notifications.map(notification => (
-                            <tr key={notification.id}>
-                                <td>{createMessage(notification)}</td>
-                            </tr>
+                            <li>
+                                <ul>
+                                    <li key={notification.id}>
+                                    {createMessage(notification)}
+                                    </li>
+                                    <li>
+                                        {notification.post_content}
+                                    </li>
+                                </ul>
+                            </li>
                         ))}
-                    </tbody>
-                </table>
+                  
+                </ul>
             ) : (
                 <p>No recent notifications.</p>
             )}
-            <button onClick={onClose}>Close</button>
+            
         </div>
     );
 };

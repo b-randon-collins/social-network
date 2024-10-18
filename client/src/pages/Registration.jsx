@@ -40,7 +40,7 @@ const Registration = () => {
     };
 
     return (
-        <div className='page'>
+        <div className='page registration-form'>
             <h2>Register</h2>
             <Formik
                 id="registration-form"
