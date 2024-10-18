@@ -5,7 +5,7 @@ export const fetchComments = createAsyncThunk(
   'comments/fetchComments',
   async (postId, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`http://localhost:3001/comment/${postId}`, { withCredentials: true });
+      const response = await axios.get(`http://127.0.0.1:3001/comment/${postId}`, { withCredentials: true });
       return { postId, comments: response.data.comments };
     } catch (err) {
       return rejectWithValue(err.response.data);
@@ -17,7 +17,7 @@ export const addComment = createAsyncThunk(
   'comments/addComment',
   async ({ postId, content }, { rejectWithValue }) => {
     try {
-      const response = await axios.post('http://localhost:3001/comment/', { post_id: postId, content }, { withCredentials: true });
+      const response = await axios.post('http://127.0.0.1:3001/comment/', { post_id: postId, content }, { withCredentials: true });
       return response.data;
     } catch (err) {
       return rejectWithValue(err.response.data);

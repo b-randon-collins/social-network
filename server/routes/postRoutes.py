@@ -3,6 +3,7 @@ from models.postModel import db, Post
 from models.userModel import db, User
 from models.likeModel import db, Like
 from models.commentModel import db, Comment
+from models.notificationModel import db, Notification
 
 post_bp = Blueprint('post', __name__)
 
@@ -17,10 +18,10 @@ def create_post():
         return jsonify(message="Unauthorized"), 401
 
     data = request.get_json()
-    
+
     if not data:
         return jsonify(message="No data provided"), 400
-    
+
     content = data.get('content')
     user_id = session.get('user_id')
 
@@ -33,6 +34,13 @@ def create_post():
 
     post = Post(content=content, user_id=user_id)
     db.session.add(post)
+    db.session.commit()
+
+    all_users = User.query.all()
+    for user in all_users:
+        notification = Notification(user_id=user.id, post_id=post.id)
+        db.session.add(notification)
+
     db.session.commit()
 
     likes_count = 0
@@ -102,4 +110,3 @@ def get_all_posts():
         'comments': first_comments,
         'recent_comments': recent_comments,
     }), 200
-

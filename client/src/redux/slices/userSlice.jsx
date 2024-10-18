@@ -6,7 +6,7 @@ import axios from 'axios';
 export const registerUser = createAsyncThunk(
     'user/register',
     async (userData) => {
-        const response = await axios.post('http://localhost:3001/user/signup', userData);
+        const response = await axios.post('http://127.0.0.1:3001/user/signup', userData);
         return response.data;
     }
 );
@@ -14,7 +14,7 @@ export const registerUser = createAsyncThunk(
 export const attemptLogin = createAsyncThunk(
     'user/login',
     async (credentials) => {
-        const response = await axios.post('http://localhost:3001/user/login', credentials, {
+        const response = await axios.post('http://127.0.0.1:3001/user/login', credentials, {
             withCredentials: true,
         });
         return response.data;
@@ -24,10 +24,10 @@ export const attemptLogin = createAsyncThunk(
 export const editUser = createAsyncThunk(
     'user/edit',
     async (userData) => {
-        const response = await axios.patch('http://localhost:3001/user/edit', userData, {
+        const response = await axios.patch('http://127.0.0.1:3001/user/edit', userData, {
             withCredentials: true,
         });
-        return response.data.user; // Assuming response contains user data
+        return response.data.user;
     }
 );
 

@@ -1,6 +1,7 @@
 // src/App.jsx
-import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import MainNav from './components/MainNav';
 import Welcome from './pages/Welcome';
 import Login from './pages/Login';
@@ -9,22 +10,32 @@ import Registration from './pages/Registration';
 import UserEditForm from './pages/UserEditForm';
 
 const App = () => {
-
-  useEffect(() => {
-    if (window.location.hostname !== 'localhost') {
-      window.location.href = 'http://localhost:5173';
-    }
-  }, []);
+  const user = useSelector(state => state.user.user);
 
   return (
     <Router>
       <MainNav />
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/welcome" element={<Welcome />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Registration />} />
-        <Route path="/profile" element={<UserEditForm />} />
+        <Route 
+          path="/" 
+          element={user?.id ? <Home /> : <Navigate to="/login" />} 
+        />
+        <Route 
+          path="/welcome" 
+          element={user?.id ? <Welcome /> : <Navigate to="/login" />} 
+        />
+        <Route 
+          path="/login" 
+          element={!user?.id ? <Login /> : <Navigate to="/" />} 
+        />
+        <Route 
+          path="/register" 
+          element={!user?.id ? <Registration /> : <Navigate to="/" />} 
+        />
+        <Route 
+          path="/profile" 
+          element={user?.id ? <UserEditForm /> : <Navigate to="/login" />} 
+        />
       </Routes>
     </Router>
   );

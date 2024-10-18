@@ -24,7 +24,6 @@ input {
     background-color: white;
     width: 100%;
     padding: 10px;
-    margin-bottom: 15px;
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 14px;
@@ -85,7 +84,7 @@ button:hover:not(:disabled) {
     width: 500px;
     margin: auto;
 }
-#post-form-block form > textarea {
+#post-form-block form > input {
     border: 1px solid lightgrey;
     border-radius: 5px;
     padding: 10px;
@@ -120,4 +119,10 @@ button:hover:not(:disabled) {
 
 .comments-list-block > ul {
     padding: 0;
+}
+
+.login-form button {
+    margin-top: 20px;
+    width: 100%;
+    font-size: large;
 }

@@ -1,5 +1,6 @@
+// ViewPostBlock.jsx
 import React, { useState, useRef } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addLike, removeLike } from '../redux/slices/postSlice';
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
@@ -9,9 +10,13 @@ import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 
 const ViewPostBlock = ({ post, userId }) => {
   const dispatch = useDispatch();
+
+  const comments = useSelector(state => state.comments[post.id] || []);
+  
   const [likesCount, setLikesCount] = useState(post.likes_count);
   const [liked, setLiked] = useState(post.logged_user_liked);
   const commentInputRef = useRef(null);
+  const displayedCommentCount = post.comment_count > comments.length ? post.comment_count : comments.length;
 
   const handleLike = () => {
     if (userId) {
@@ -57,12 +62,12 @@ const ViewPostBlock = ({ post, userId }) => {
         <div style={footerHalfStyle} onClick={handleCommentClick}>
           <span style={iconTextWrapper}>
             <ChatBubbleOutlineIcon style={iconStyleChatBubble} />
-            <span>{post.comment_count} Comments</span>
+            <span>{displayedCommentCount} Comments</span>
           </span>
         </div>
       </div>
 
-      <CommentListBlock postId={post.id} comment_count={post.comment_count} />
+      <CommentListBlock postId={post.id} comment_count={comments.length} />
       <CommentFormBlock postId={post.id} ref={commentInputRef} />
     </div>
   );

@@ -92,4 +92,3 @@ def logout():
     response.set_cookie('user_id', '', expires=0)
     return response, 204
 
-

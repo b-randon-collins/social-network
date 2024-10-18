@@ -11,7 +11,7 @@ const CommentFormBlock = forwardRef(({ postId, addNewComment }, ref) => {
     e.preventDefault();
     if (content.trim()) {
       dispatch(addComment({ postId, content })).unwrap().then((newComment) => {
-        addNewComment(newComment);  // Add the newly added comment to local state
+        addNewComment(newComment);
       });
       setContent('');
     }

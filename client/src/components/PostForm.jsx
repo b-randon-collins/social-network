@@ -38,7 +38,8 @@ const PostForm = () => {
   return (
     <div id='post-form-block'>
       <form onSubmit={handleSubmit}>
-        <textarea
+        <input
+          type="text"
           value={content}
           onChange={(e) => setContent(e.target.value)}
           placeholder="What's on your mind?"

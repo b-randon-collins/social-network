@@ -17,7 +17,7 @@ const CommentFormBlock = forwardRef(({ postId, shouldFocus }, ref) => {
 
   useEffect(() => {
     if (shouldFocus && ref.current) {
-      ref.current.focus(); // Focus the input if shouldFocus is true
+      ref.current.focus();
     }
   }, [shouldFocus, ref]);
 
