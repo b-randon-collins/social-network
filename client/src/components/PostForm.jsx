@@ -38,14 +38,15 @@ const PostForm = () => {
   return (
     <div id='post-form-block'>
       <form onSubmit={handleSubmit}>
-        <textarea
+        <input
+          type="text"
           value={content}
           onChange={(e) => setContent(e.target.value)}
           placeholder="What's on your mind?"
           required
         />
         <button type="submit" disabled={loading}>
-          {loading ? 'Posting...' : 'Create Post'}
+          {loading ? 'Posting...' : 'Add Post'}
         </button>
       </form>
       {error && <p style={{ color: 'red' }}>{error}</p>}

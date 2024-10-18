@@ -22,7 +22,7 @@ const Registration = () => {
     });
 
     const handleSubmit = async (values, { setSubmitting }) => {
-        const response = await fetch('http://localhost:3001/user/signup', {
+        const response = await fetch('http://127.0.0.1:3001/user/signup', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -40,7 +40,7 @@ const Registration = () => {
     };
 
     return (
-        <div className='page'>
+        <div className='page registration-form'>
             <h2>Register</h2>
             <Formik
                 id="registration-form"

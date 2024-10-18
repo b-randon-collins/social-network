@@ -8,5 +8,7 @@ class Post(db.Model):
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
+    notifications = db.relationship('Notification', back_populates='post')
+
     def __repr__(self):
         return f"<Post {self.id}, User ID: {self.user_id}, Content: {self.content}>"

@@ -6,14 +6,12 @@ from models.userModel import User
 comment_bp = Blueprint('comment', __name__)
 
 def is_authenticated():
-    print(f"Session Data: {session}")
     if 'user_id' in session:
         return True
     return False
 
 @comment_bp.route('/<int:post_id>', methods=['GET'])
 def get_comments(post_id):
-
     comments = Comment.query.filter_by(post_id=post_id).all()
     comment_list = [{
         'id': comment.id,
@@ -29,9 +27,6 @@ def get_comments(post_id):
 def create_comment():
     if request.method == 'OPTIONS':
         return jsonify(success=True), 200
-    
-    if not is_authenticated():
-        return jsonify(message="Unauthorized"), 401
 
     data = request.get_json()
     post_id = data.get('post_id')
@@ -51,6 +46,7 @@ def create_comment():
         'user_id': comment.user_id,
         'name': comment.author.name,
         'created_at': comment.created_at,
-        'post_id': comment.post_id
+        'post_id': post_id
     }), 201
+
 

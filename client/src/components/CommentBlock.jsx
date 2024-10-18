@@ -17,7 +17,7 @@ const CommentFormBlock = forwardRef(({ postId, shouldFocus }, ref) => {
 
   useEffect(() => {
     if (shouldFocus && ref.current) {
-      ref.current.focus(); // Focus the input if shouldFocus is true
+      ref.current.focus();
     }
   }, [shouldFocus, ref]);
 
@@ -27,7 +27,7 @@ const CommentFormBlock = forwardRef(({ postId, shouldFocus }, ref) => {
         type="text"
         value={content}
         onChange={(e) => setContent(e.target.value)}
-        placeholder="Write a comment..."
+        placeholder="Add a comment..."
         ref={ref}
       />
       <button type="submit"><NavigateNextIcon /></button>

@@ -8,7 +8,7 @@ export const createPost = createAsyncThunk(
   'posts/createPost',
   async (postData, { rejectWithValue }) => {
     try {
-      const response = await axios.post('http://localhost:3001/post/', postData, { withCredentials: true });
+      const response = await axios.post('http://127.0.0.1:3001/post/', postData, { withCredentials: true });
       return response.data;
     } catch (err) {
       return rejectWithValue(err.response.data);
@@ -20,7 +20,7 @@ export const fetchPosts = createAsyncThunk(
   'posts/fetchPosts',
   async (_, { rejectWithValue, dispatch }) => {
     try {
-      const response = await axios.get('http://localhost:3001/post/', { withCredentials: true });
+      const response = await axios.get('http://127.0.0.1:3001/post/', { withCredentials: true });
       const { posts, comments, recent_comments } = response.data; // Extract recent_comments here
 
       dispatch(addInitialComments(comments));
@@ -43,7 +43,7 @@ export const addLike = createAsyncThunk(
   'posts/addLike',
   async ({ userId, postId }, { rejectWithValue }) => {
     try {
-      const response = await axios.post('http://localhost:3001/like/', { user_id: userId, post_id: postId }, { withCredentials: true });
+      const response = await axios.post('http://127.0.0.1:3001/like/', { user_id: userId, post_id: postId }, { withCredentials: true });
       return response.data;
     } catch (err) {
       return rejectWithValue(err.response.data);
@@ -55,7 +55,7 @@ export const removeLike = createAsyncThunk(
   'posts/removeLike',
   async ({ userId, postId }, { rejectWithValue }) => {
     try {
-      const response = await axios.delete(`http://localhost:3001/like/${postId}`, { data: { user_id: userId }, withCredentials: true });
+      const response = await axios.delete(`http://127.0.0.1:3001/like/${postId}`, { data: { user_id: userId }, withCredentials: true });
       return response.data;
     } catch (err) {
       return rejectWithValue(err.response.data);

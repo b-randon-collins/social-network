@@ -23,7 +23,9 @@ def upgrade():
         sa.Column('name', sa.String(length=80), nullable=False),
         sa.Column('email', sa.String(length=120), nullable=False),
         sa.Column('_password_hash', sa.String(length=128), nullable=False),
-        sa.Column('bio', sa.Text(), nullable=True),  # Added bio field
+        sa.Column('bio', sa.Text(), nullable=True),
+        sa.Column('notification_alert', sa.Boolean(), nullable=False, default=False),
+
         sa.PrimaryKeyConstraint('id'),
         sa.UniqueConstraint('email')
     )

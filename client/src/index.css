@@ -9,7 +9,6 @@
   -webkit-font-smoothing: antialiased;
 }
 .page {
-  padding-top: 20px;
   width: 80%;
   margin: auto;
 }
@@ -70,10 +69,8 @@ nav#main-nav > ul {
 }
 
 div#root {
-    padding-top: 40px;
+  padding-top: 80px;
 }
-
-#main-nav ul li {
-    display: inline-flex;
+.posts-list {
+  margin-top: 70px;
 }
-

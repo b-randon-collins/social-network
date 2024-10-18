@@ -3,20 +3,35 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
+export const resetNotificationAlert = createAsyncThunk(
+    'user/resetNotificationAlert',
+    async (userId) => {
+        const response = await axios.patch('http://127.0.0.1:3001/user/notification_alert_reset', { user_id: userId }, {
+            withCredentials: true,
+        });
+        return response.data;
+    }
+);
+
 export const registerUser = createAsyncThunk(
     'user/register',
     async (userData) => {
-        const response = await axios.post('http://localhost:3001/user/signup', userData);
+        const response = await axios.post('http://127.0.0.1:3001/user/signup', userData);
         return response.data;
     }
 );
 
 export const attemptLogin = createAsyncThunk(
     'user/login',
-    async (credentials) => {
-        const response = await axios.post('http://localhost:3001/user/login', credentials, {
+    async ({ credentials, socket }) => {
+        const response = await axios.post('http://127.0.0.1:3001/user/login', credentials, {
             withCredentials: true,
         });
+        
+        if (socket) {
+            socket.emit('join', { userId: response.data.id });
+        }
+
         return response.data;
     }
 );
@@ -24,10 +39,10 @@ export const attemptLogin = createAsyncThunk(
 export const editUser = createAsyncThunk(
     'user/edit',
     async (userData) => {
-        const response = await axios.patch('http://localhost:3001/user/edit', userData, {
+        const response = await axios.patch('http://127.0.0.1:3001/user/edit', userData, {
             withCredentials: true,
         });
-        return response.data.user; // Assuming response contains user data
+        return response.data.user;
     }
 );
 
@@ -41,6 +56,11 @@ const userSlice = createSlice({
     reducers: {
         logout: (state) => {
             state.user = null;
+        },
+        notificationAlertTrue: (state) => {
+            if (state.user) {
+                state.user.notification_alert = true;
+            }
         },
     },
     extraReducers: (builder) => {
@@ -80,7 +100,13 @@ const userSlice = createSlice({
             .addCase(editUser.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message;
+            })
+            .addCase(resetNotificationAlert.fulfilled, (state) => {
+                if (state.user) {
+                    state.user.notification_alert = 0;
+                }
             });
+
 
     },
 });
