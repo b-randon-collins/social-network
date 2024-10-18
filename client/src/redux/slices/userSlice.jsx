@@ -13,10 +13,15 @@ export const registerUser = createAsyncThunk(
 
 export const attemptLogin = createAsyncThunk(
     'user/login',
-    async (credentials) => {
+    async ({ credentials, socket }) => {
         const response = await axios.post('http://127.0.0.1:3001/user/login', credentials, {
             withCredentials: true,
         });
+        
+        if (socket) {
+            socket.emit('join', { userId: response.data.id });
+        }
+
         return response.data;
     }
 );

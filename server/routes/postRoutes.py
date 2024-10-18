@@ -1,4 +1,6 @@
+# routes/postRoutes.py
 from flask import Blueprint, request, jsonify, session
+from flask_socketio import emit
 from models.postModel import db, Post
 from models.userModel import db, User
 from models.likeModel import db, Like
@@ -8,9 +10,8 @@ from models.notificationModel import db, Notification
 post_bp = Blueprint('post', __name__)
 
 def is_authenticated():
-    if 'user_id' in session:
-        return True
-    return False
+    return 'user_id' in session
+
 
 @post_bp.route('/', methods=['POST'])
 def create_post():
@@ -18,7 +19,6 @@ def create_post():
         return jsonify(message="Unauthorized"), 401
 
     data = request.get_json()
-
     if not data:
         return jsonify(message="No data provided"), 400
 
@@ -37,6 +37,7 @@ def create_post():
     db.session.commit()
 
     all_users = User.query.all()
+
     for user in all_users:
         notification = Notification(user_id=user.id, post_id=post.id)
         db.session.add(notification)
@@ -59,7 +60,7 @@ def create_post():
 @post_bp.route('/', methods=['GET'])
 def get_all_posts():
     user_id = session.get('user_id')
-    posts = Post.query.order_by(Post.created_at.desc()).all()  
+    posts = Post.query.order_by(Post.created_at.desc()).all()
     all_posts = []
     first_comments = []
     recent_comments = {}

@@ -1,17 +1,19 @@
 // src/pages/Login.jsx
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { attemptLogin } from '../redux/slices/userSlice';
+import { io } from 'socket.io-client';
 import '../styles.css';
 
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { loading, error } = useSelector((state) => state.user);
+  const [socket, setSocket] = useState(null);
 
   const initialValues = {
     email: 'john@example.com',
@@ -24,7 +26,7 @@ const Login = () => {
   });
 
   const handleLogin = async (values, { setSubmitting }) => {
-    const result = await dispatch(attemptLogin(values));
+    const result = await dispatch(attemptLogin({ credentials: values, socket }));
     setSubmitting(false);
 
     if (attemptLogin.fulfilled.match(result)) {
@@ -33,6 +35,15 @@ const Login = () => {
       alert(result.error?.message || 'Login failed!');
     }
   };
+
+  useEffect(() => {
+    const newSocket = io('http://127.0.0.1:3001');
+    setSocket(newSocket);
+
+    return () => {
+      newSocket.disconnect();
+    };
+  }, []);
 
   return (
     <div className='page login-form'>
