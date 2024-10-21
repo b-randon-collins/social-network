@@ -1,6 +1,4 @@
-# app.py
-
-from flask import Flask, jsonify
+from flask import Flask, jsonify, session, request
 from flask_migrate import Migrate
 from flask_cors import CORS
 from database import db
@@ -10,7 +8,7 @@ from routes.likeRoutes import create_like_bp
 from routes.postRoutes import post_bp
 from routes.commentRoutes import comment_bp
 from routes.notificationRoutes import notification_bp
-
+from models.userModel import db, User
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins='*')
 
@@ -32,14 +30,14 @@ app.register_blueprint(create_like_bp(socketio), url_prefix='/like')
 app.register_blueprint(comment_bp, url_prefix='/comment')
 app.register_blueprint(notification_bp, url_prefix='/notifications')
 
-@app.route('/')
-def welcome():
-    return jsonify(message="Welcome to the Social Network API!")
-
-@app.route('/emit')
-def emit_event():
-    socketio.emit('new_notification', {'data': 'Hello from emit!'}, namespace='/')
-    return jsonify(message="Event emitted!")
+@app.route('/check-auth', methods=['GET'])
+def check_auth():
+    user_id = session.get('user_id')
+    if user_id:
+        user = User.query.get(user_id)
+        if user:
+            return jsonify(id=user.id, name=user.name, email=user.email), 200
+    return jsonify(message="Not authenticated"), 401
 
 if __name__ == '__main__':
     socketio.run(app, debug=True, port=3001)

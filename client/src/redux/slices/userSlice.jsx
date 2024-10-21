@@ -36,6 +36,16 @@ export const attemptLogin = createAsyncThunk(
     }
 );
 
+export const attemptAutoLogin = createAsyncThunk(
+    'user/autoLogin',
+    async () => {
+      const response = await axios.get('http://127.0.0.1:3001/check-auth', {
+        withCredentials: true,
+      });
+      return response.data;
+    }
+  );
+
 export const editUser = createAsyncThunk(
     'user/edit',
     async (userData) => {
@@ -49,14 +59,15 @@ export const editUser = createAsyncThunk(
 const userSlice = createSlice({
     name: 'user',
     initialState: {
-        user: null,
-        loading: false,
-        error: null,
+      user: null,
+      loading: false,
+      error: null,
+      authChecked: false,
     },
     reducers: {
-        logout: (state) => {
-            state.user = null;
-        },
+      logout: (state) => {
+        state.user = null;
+      },
         notificationAlertTrue: (state) => {
             if (state.user) {
                 state.user.notification_alert = true;
@@ -65,7 +76,22 @@ const userSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(registerUser.pending, (state) => {
+            .addCase(attemptAutoLogin.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+                state.authChecked = false;
+            })
+            .addCase(attemptAutoLogin.fulfilled, (state, action) => {
+                state.loading = false;
+                state.user = action.payload;
+                state.authChecked = true;
+            })
+            .addCase(attemptAutoLogin.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message;
+                state.authChecked = true;
+            })
+          .addCase(registerUser.pending, (state) => {
                 state.loading = true;
                 state.error = null;
             })

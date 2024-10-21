@@ -235,3 +235,16 @@ div#post-form-block {
 .page.activities-page > ul {
     list-style: none;
 }
+
+
+.notifications-menu > button {
+    width: unset;
+    text-align: right;
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 4px 5px 2px;
+    margin: 4px;
+    background: none;
+    color: grey;
+}
