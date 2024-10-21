@@ -6,6 +6,7 @@ from models.postModel import db, Post
 
 notification_bp = Blueprint('notification', __name__)
 
+
 @notification_bp.route('/all', methods=['GET'])
 def get_all_notifications():
     user_id = session.get('user_id')
@@ -43,7 +44,7 @@ def get_recent_notifications():
         .join(Post, Notification.post_id == Post.id)
         .filter(Post.user_id == user_id)
         .order_by(Notification.created_at.desc())
-        .limit(4)
+        .limit(5)
         .all()
     )
 
@@ -53,7 +54,7 @@ def get_recent_notifications():
         'created_at': n.created_at,
         'is_read': n.is_read,
         'username': n.user.name if n.user else 'Unknown User',
-        'post_content': n.post.content  # Include the post content in the response
+        'post_content': n.post.content
     } for n in notifications]), 200
 
 
@@ -76,8 +77,18 @@ def clear_notifications():
     if not user_id:
         return jsonify({'message': 'User not logged in'}), 401
 
-    Notification.query.filter_by(user_id=user_id).delete()
+    notifications_to_delete = (
+        Notification.query
+        .join(Post, Notification.post_id == Post.id)
+        .filter(Post.user_id == user_id)
+        .all()
+    )
+
+    for notification in notifications_to_delete:
+        db.session.delete(notification)
+    
     db.session.commit()
+
     return jsonify({'message': 'All notifications cleared'}), 200
 
 def emit_new_notification(user_id, post_id):

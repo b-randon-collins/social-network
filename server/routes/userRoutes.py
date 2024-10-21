@@ -44,7 +44,7 @@ def create_user_bp(socketio):
                 active_users[user.id] = user.name
 
                 return response, 200
-        return jsonify(message="Invalid email or password."), 401
+        return jsonify(message="Invalid email or password."), 40
 
 
     @user_bp.route('/signup', methods=['POST'])

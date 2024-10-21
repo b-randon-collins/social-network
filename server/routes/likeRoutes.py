@@ -17,35 +17,35 @@ def create_like_bp(socketio):
         db.session.add(new_like)
         db.session.commit()
 
-        all_users = User.query.all()
-        for user in all_users:
-            user.notification_alert = 1
+        post = Post.query.get(post_id)
+        author_id = post.user_id if post else None
+        post_content = post.content if post else None
+        liker = User.query.get(user_id)
+
+        socketio.emit('new_notification', {
+            'message': f'{liker.name} likedaaaaa your post!',
+            'author_id': author_id,
+            'post_id': post_id,
+            'username': liker.name,
+            'post_content': post_content
+        })
+
+        new_notification = Notification(
+            user_id=user_id,
+            post_id=post_id,
+            is_read=False
+        )
+        db.session.add(new_notification)
         db.session.commit()
 
-        post = Post.query.get(post_id)
-        if post:
-            author_id = post.user_id  
-            room_id = f"room_{author_id}"
-
-            print(f"Adding like: User ID {user_id} liked Post ID {post_id}.")
-            print(f"Author ID: {author_id}")
-            print(f"Room ID: {room_id}")
-
-            socketio.emit('new_notification', {
-                'message': f'User {user_id} liked Post ID {post_id}!',
-                'author_id': author_id,
-                'post_id': post_id
-            })
-
-            new_notification = Notification(
-                user_id=user_id,
-                post_id=post_id,
-                is_read=False
-            )
-            db.session.add(new_notification)
-            db.session.commit()
-
-        return jsonify({'message': 'Like added successfully', 'like_id': new_like.id}), 201
+        return jsonify({
+            'message': 'Like added successfully',
+            'like_id': new_like.id,
+            'author_id': author_id,
+            'post_content': post_content,
+            'liker_id': user_id,
+            'liker_name': liker.name
+        }), 201
 
     @like_bp.route('/<int:post_id>', methods=['GET'])
     def get_likes(post_id):

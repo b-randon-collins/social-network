@@ -12,6 +12,8 @@ const Home = () => {
   const loading = useSelector((state) => state.posts.loading);
   const userId = useSelector((state) => state.user.user?.id);
 
+  const reduxListName = "homePageAll";
+
   useEffect(() => {
     dispatch(fetchPosts());
   }, [dispatch]);

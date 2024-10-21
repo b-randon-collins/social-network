@@ -1,40 +1,55 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getRecentNotifications } from '../redux/slices/notificationSlice';
 import CloseIcon from '@mui/icons-material/Close';
 
-const NotificationsMenuBlock = ({ onClose }) => {
-    const notifications = useSelector(state => state.notifications.notifications);
+const NotificationsMenuBlock = ({ onClose, isMenuOpen }) => {
+    const dispatch = useDispatch();
+    const notifications = useSelector(state => state.notifications.data);
+    const notificationIds = useSelector(state => state.notifications.lists.notificationsMenuBlockRecent);
+    const loading = useSelector(state => state.notifications.loading);
+    const reduxListName = "notificationsMenuBlockRecent";
+
+    useEffect(() => {
+        if (isMenuOpen) {
+            dispatch(getRecentNotifications(reduxListName));
+        }
+    }, [dispatch, isMenuOpen, reduxListName]);
 
     const createMessage = (notification) => {
         const date = new Date(notification.created_at).toLocaleDateString();
-        return `${notification.username} liked your post.`;
+        return `${notification.username} liked your post on ${date}.`;
     };
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <div className="notifications-menu">
-            <h3>Activities</h3>
+            <span>Alerts</span>
             <button onClick={onClose}><CloseIcon /></button>
-            {notifications.length > 0 ? (
+            {notificationIds && notificationIds.length > 0 ? (
                 <ul>
-                 
-                        {notifications.map(notification => (
-                            <li>
+                    {notificationIds.map(id => {
+                        const notification = notifications[id];
+                        return (
+                            <li key={id}>
                                 <ul>
-                                    <li key={notification.id}>
-                                    {createMessage(notification)}
+                                    <li>
+                                        {createMessage(notification)}
                                     </li>
                                     <li>
                                         {notification.post_content}
                                     </li>
                                 </ul>
                             </li>
-                        ))}
-                  
+                        );
+                    })}
                 </ul>
             ) : (
-                <p>No recent notifications.</p>
+                <p>No recent alerts.</p>
             )}
-            
         </div>
     );
 };
